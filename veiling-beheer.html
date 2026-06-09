@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veilingen Beheren – Forhaut</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .beheer-wrapper {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px 60px;
+        }
+
+        .beheer-kaart {
+            background: #fff8e1;
+            border-radius: 25px;
+            padding: 30px;
+            border: 3px solid #ffb300;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+            margin-bottom: 30px;
+        }
+
+        .beheer-kaart h2 {
+            margin: 0 0 22px;
+            font-size: 24px;
+        }
+
+        .formulier-rij {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .formulier-rij label {
+            font-weight: bold;
+            font-size: 15px;
+            margin-bottom: 2px;
+            display: block;
+        }
+
+        .formulier-rij input,
+        .formulier-rij textarea,
+        .formulier-rij select {
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            padding: 14px;
+            border-radius: 14px;
+            border: 2px solid #ffb300;
+            background: #fffde7;
+            font-size: 16px;
+            font-family: Arial, sans-serif;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #e69634;
+            box-shadow: 0 0 10px rgba(255,111,0,0.3);
+        }
+
+        .twee-kolommen {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .preview-img {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 14px;
+            margin-top: 10px;
+            display: none;
+            border: 2px solid #ffb300;
+        }
+
+        .melding {
+            padding: 12px 18px;
+            border-radius: 12px;
+            font-weight: bold;
+            margin-top: 14px;
+            display: none;
+        }
+
+        .melding.succes { background: #c8e6c9; color: #1b5e20; }
+        .melding.fout   { background: #ffcdd2; color: #b71c1c; }
+
+        .veiling-rij {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 18px;
+            background: white;
+            border-radius: 16px;
+            margin-bottom: 10px;
+            border: 2px solid #ffe082;
+        }
+
+        .veiling-rij img {
+            width: 70px;
+            height: 55px;
+            object-fit: cover;
+            border-radius: 10px;
+            flex-shrink: 0;
+        }
+
+        .veiling-rij-info {
+            flex: 1;
+        }
+
+        .veiling-rij-info strong {
+            display: block;
+            font-size: 16px;
+        }
+
+        .veiling-rij-info span {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .verwijder-btn {
+            background: linear-gradient(135deg, #ef5350, #c62828);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+
+        .verwijder-btn:hover {
+            transform: scale(1.05);
+            background: linear-gradient(135deg, #e53935, #b71c1c);
+        }
+
+        .leeg-melding {
+            color: #888;
+            font-style: italic;
+            padding: 10px 0;
+        }
+
+        .badge-actief-klein {
+            display: inline-block;
+            background: #43a047;
+            color: white;
+            border-radius: 10px;
+            padding: 2px 8px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-left: 6px;
+        }
+
+        .badge-verlopen-klein {
+            display: inline-block;
+            background: #9e9e9e;
+            color: white;
+            border-radius: 10px;
+            padding: 2px 8px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-left: 6px;
+        }
+
+        @media(max-width: 600px) {
+            .twee-kolommen { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="wachtwoord-overlay" style="position:fixed;inset:0;background:#ffd740;display:flex;align-items:center;justify-content:center;z-index:99999;">
+    <div style="background:#fff8e1;border:3px solid #ffb300;border-radius:24px;padding:40px 36px;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,0.15);max-width:340px;width:90%;">
+        <h2 style="margin:0 0 8px;font-size:22px;color:#222;">🔐 Beheerder</h2>
+        <p style="color:#888;font-size:14px;margin:0 0 22px;">Voer het wachtwoord in om verder te gaan</p>
+        <input type="password" id="ww-invoer" placeholder="••••" maxlength="20" style="width:100%;padding:12px 16px;border:2px solid #ffb300;border-radius:12px;font-size:18px;text-align:center;letter-spacing:6px;outline:none;box-sizing:border-box;" />
+        <button id="ww-knop" style="margin-top:16px;width:100%;padding:13px;background:linear-gradient(135deg,#ffb300,#e69634);color:#fff;border:none;border-radius:14px;font-size:16px;font-weight:bold;cursor:pointer;">Inloggen</button>
+        <div id="ww-fout" style="color:#e53935;font-size:13px;margin-top:10px;min-height:18px;"></div>
+    </div>
+</div>
+
+<header class="header-checkout">
+    <h1>⚙️ Veilingen Beheren</h1>
+    <nav>
+        <ul>
+            <a href="veiling.html" id="winkelwagen-knop">🔨</a>
+            <a href="index.html" id="index2-knop">🧀</a>
+        </ul>
+    </nav>
+</header>
+
+<div class="beheer-wrapper">
+
+    <div class="beheer-kaart">
+        <h2>➕ Nieuwe veiling aanmaken</h2>
+        <div class="formulier-rij">
+            <div>
+                <label>Naam van het product *</label>
+                <input type="text" id="v-naam" placeholder="bijv. Speciale Forhaut Kaas">
+            </div>
+            <div>
+                <label>Beschrijving *</label>
+                <textarea id="v-beschrijving" placeholder="Korte omschrijving van het product..."></textarea>
+            </div>
+            <div>
+                <label>Afbeelding URL *</label>
+                <input type="url" id="v-afbeelding" placeholder="https://...">
+                <img id="v-preview" class="preview-img" alt="Voorbeeld">
+            </div>
+            <div class="twee-kolommen">
+                <div>
+                    <label>Startprijs (€) *</label>
+                    <input type="number" id="v-startprijs" placeholder="bijv. 10" min="0.01" step="0.01">
+                </div>
+                <div>
+                    <label>Minimum biedstap (€) *</label>
+                    <input type="number" id="v-stap" placeholder="bijv. 1" min="0.01" step="0.01">
+                </div>
+            </div>
+            <div>
+                <label>Looptijd *</label>
+                <select id="v-looptijd">
+                    <option value="0.00278">⏱ 10 seconden (test)</option>
+                    <option value="1">1 uur</option>
+                    <option value="2">2 uur</option>
+                    <option value="6">6 uur</option>
+                    <option value="12">12 uur</option>
+                    <option value="24" selected>24 uur</option>
+                    <option value="48">48 uur</option>
+                    <option value="72">72 uur</option>
+                    <option value="168">1 week</option>
+                </select>
+            </div>
+            <button id="aanmaken-btn">✅ Veiling aanmaken</button>
+            <div class="melding" id="aanmaken-melding"></div>
+        </div>
+    </div>
+
+    <div class="beheer-kaart">
+        <h2>📋 Huidige veilingen</h2>
+        <div id="veilingen-lijst">
+            <p class="leeg-melding">Laden...</p>
+        </div>
+    </div>
+
+</div>
+
+<script src="veiling-beheer.js"></script>
+</body>
+</html>

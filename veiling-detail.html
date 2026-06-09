@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veiling – Forhaut</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .detail-wrapper {
+            max-width: 750px;
+            margin: 40px auto;
+            padding: 0 20px 40px;
+        }
+
+        .detail-kaart {
+            background: #fff8e1;
+            border-radius: 25px;
+            padding: 30px;
+            border: 3px solid #ffb300;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.13);
+        }
+
+        .detail-kaart img {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: 18px;
+            margin-bottom: 20px;
+        }
+
+        .huidig-bod-groot {
+            font-size: 38px;
+            font-weight: bold;
+            color: #e65100;
+            margin: 10px 0 5px;
+        }
+
+        .countdown-groot {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff6f00, #ff9800);
+            color: white;
+            padding: 12px 22px;
+            border-radius: 14px;
+            font-weight: bold;
+            font-size: 20px;
+            margin: 14px 0;
+            letter-spacing: 2px;
+        }
+
+        .countdown-groot.verlopen {
+            background: linear-gradient(135deg, #9e9e9e, #757575);
+        }
+
+        .bied-sectie {
+            margin-top: 25px;
+            padding: 22px;
+            background: #fffde7;
+            border-radius: 18px;
+            border: 2px dashed #ffb300;
+        }
+
+        .bied-sectie h3 {
+            margin: 0 0 14px;
+            font-size: 20px;
+        }
+
+        .bied-rij {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .bied-rij input {
+            flex: 1;
+            max-width: none;
+        }
+
+        .biedingen-lijst {
+            margin-top: 25px;
+        }
+
+        .biedingen-lijst h3 {
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+
+        .bied-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 16px;
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            border: 2px solid #ffe082;
+        }
+
+        .bied-item:first-child {
+            border-color: #ff9800;
+            background: #fff3e0;
+        }
+
+        .bied-item .bied-naam {
+            font-weight: bold;
+        }
+
+        .bied-item .bied-bedrag {
+            font-weight: bold;
+            color: #e65100;
+            font-size: 18px;
+        }
+
+        .bied-item .bied-tijd {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .winnaar-banner {
+            background: linear-gradient(135deg, #43a047, #2e7d32);
+            color: white;
+            padding: 16px 22px;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin: 16px 0;
+        }
+
+        .melding-inline {
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-weight: bold;
+            margin-top: 12px;
+            display: none;
+        }
+
+        .melding-inline.succes {
+            background: #c8e6c9;
+            color: #1b5e20;
+        }
+
+        .melding-inline.fout {
+            background: #ffcdd2;
+            color: #b71c1c;
+        }
+
+        .terug-knop {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #e65100;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<header class="header-checkout">
+    <h1>🔨 Veiling</h1>
+    <nav>
+        <ul>
+            <a href="veiling.html" id="winkelwagen-knop">🔨</a>
+            <a href="index.html" id="index2-knop">🧀</a>
+        </ul>
+    </nav>
+</header>
+
+<div class="detail-wrapper">
+    <a class="terug-knop" href="veiling.html">← Terug naar veilingen</a>
+    <div class="detail-kaart" id="veiling-detail">
+        <p>Laden...</p>
+    </div>
+</div>
+
+<script src="veiling-detail.js"></script>
+</body>
+</html>

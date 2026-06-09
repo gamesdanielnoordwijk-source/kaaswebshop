@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webshop</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header-index">
+    <h1>Webshop</h1>
+    <nav>
+        <ul>
+            <a href="veiling.html" id="veiling-knop">🔨</a>
+            <a href="winkelwagen.html" id="winkelwagen-knop">🛒</a>
+            <button id="login-knop">🔓</button>
+            <a href="admin-bestellingen.html" id="admin-knop" title="Bestellingen bekijken">📋</a>
+            <button id="open-register">🫃</button>
+        </ul>
+    </nav>
+</header>
+
+<div id="filters">
+    <input type="text" id="zoek-input" placeholder="Zoek product...">
+    <select id="categorie-filter">
+        <option value="alles">Alles</option>
+        <option value="kaas">Kaas</option>
+        <option value="niet-kaas">Niet kaas</option>
+    </select>
+    <select id="sort-prijs">
+        <option value="geen">Sorteer</option>
+        <option value="laag-hoog">Prijs laag → hoog</option>
+        <option value="hoog-laag">Prijs hoog → laag</option>
+    </select>
+    <input type="number" id="min-prijs" placeholder="Min prijs">
+    <input type="number" id="max-prijs" placeholder="Max prijs">
+</div>
+
+<div class="producten">
+
+    <div class="product" data-categorie="kaas" data-prijs="29.99">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYOS9_JLAOfNJemNDJ6ZAaO_HoX-p9tociJw&s" alt="Speciale Forhaut Kaas">
+        <h2>Speciale Forhaut Kaas</h2>
+        <p class="prijs">€29,99</p>
+        <p>Speciale Forhaut kaas gemaakt met de geheime Forhaut methode. Nu voor maar €29,99 per 100 gram!</p>
+        <button class="koop-knop">Toevoegen aan winkelwagen</button>
+    </div>
+
+    <div class="product" data-categorie="kaas" data-prijs="23.99">
+        <img style="width:250px;height:165px" src="https://substackcdn.com/image/fetch/$s_!JFZP!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fbucketeer-e05bbc84-baa3-437e-9518-adb32be77984.s3.amazonaws.com%2Fpublic%2Fimages%2F8583fc54-9859-4476-bcbd-ad53b71f90ee_1600x1064.jpeg" alt="Forhaut Brie">
+        <h2>Geitse Forhaut Brie</h2>
+        <p class="prijs">€23,99</p>
+        <p>Brie speciaal gekweekt met hulp van Forhaut geiten voor een extra romige bijsmaak. Elke eerste week van de maand is er een extra verse levering! Extra lekker in combinatie met de Forhautse crackers.</p>
+        <button class="koop-knop">Toevoegen aan winkelwagen</button>
+    </div>
+
+    <div class="product" data-categorie="kaas" data-prijs="99.99">
+        <img style="width:230px;height:160px" src="https://images.unsplash.com/photo-1452195100486-9cc805987862?w=400" alt="Forhautse Luxe Kaasplank">
+        <h2>Forhautse Luxe Kaasplank</h2>
+        <p class="prijs">€99,99</p>
+        <p>Een luxe kaasplank met alle soorten Forhautse kazen die wij verkopen om te delen met de hele familie! Voor 2 personen en een klein kind als je niet te veel honger hebt.</p>
+        <button class="koop-knop">Toevoegen aan winkelwagen</button>
+    </div>
+
+    <div class="product" data-categorie="kaas" data-prijs="18.99">
+        <img src="https://images.unsplash.com/photo-1486297678162-eb2a19b0a3d5?w=400" alt="Witte Forhautkaas">
+        <h2>Witte Forhautkaas</h2>
+        <p class="prijs">€18,99</p>
+        <p>Een lekkere snack voor onderweg met een smeuige en lichte smaak, ook lekker op een Forhautse cracker.</p>
+        <button class="koop-knop">Toevoegen aan winkelwagen</button>
+    </div>
+
+    <div class="product" data-categorie="kaas" data-prijs="24.99">
+        <img src="https://images.unsplash.com/photo-1559561853-08451507cbe7?w=400" alt="Ronde Forhautkaas">
+        <h2>Ronde Forhautkaas</h2>
+        <p class="prijs">€24,99</p>
+        <p>Een heerlijke variatie van onze normale kaas in een klassieke ronde vorm! Nu voor maar €24,99 per 80 gram of maar €249,99 voor 750 gram!</p>
+        <button class="koop-knop">Toevoegen aan winkelwagen</button>
+    </div>
+
+    <div class="product" data-categorie="kaas" data-prijs="59.99">
+        <img style="width:235px;height:203px" src="https://images.unsplash.com/photo-1505575967455-40e256f73376?w=400" alt="Oude Forhautkaas">
+        <h2>Oude Forhautkaas</h2>
+        <p class="prijs">€59,99</p>
+        <p>Deze Forhautkaas heeft voldoende de tijd gehad om te rijpen, en is dus daarom nog smeuïger!</p>
+        <button class="koop-knop">Toevoegen aan winkelwagen</button>
+    </div>
+
+    <div class="product" data-categorie="niet-kaas" data-prijs="39.99">
+        <img style="width:230px;height:194px" src="https://img.joomcdn.net/984a8d98018bba9c870660b10dd7e6046b8fbb4c_original.jpeg" alt="Forhautse kaasgereedschap">
+        <h2>Forhautse kaasgereedschap</h2>
+        <p class="prijs">€39,99</p>
+        <p>De speciale Forhautse oogster die de kaas nog smeuiger maakt. Deze oogster is speciaal gemaakt om zachte kazen te oogsten.</p>
+        <button class="koop-knop">Toevoegen aan winkelwagen</button>
+    </div>
+
+    <div class="product" data-categorie="niet-kaas" data-prijs="19.99">
+        <img style="width:240px;height:200px" src="https://www.thuysvers.nl/cdn/shop/articles/Koolhydraatarme_crackers_cf5f0f37-3dee-4265-a04d-948c58e30bf3.jpg" alt="Forhautse crackers">
+        <h2>Forhautse crackers</h2>
+        <p class="prijs">€19,99</p>
+        <p>Dit product is een perfecte aanvoeging aan de perfecte forhautskaas, extra lekker als je iets wil cracken. Best om te delen met z'n drieën.</p>
+        <button class="koop-knop">Toevoegen aan winkelwagen</button>
+    </div>
+
+</div>
+
+<div id="melding">
+    Toegevoegd!
+    <a href="winkelwagen.html">Ga naar winkelwagen</a>
+</div>
+
+<div id="login-popup" class="popup">
+    <div class="popup-content">
+        <span id="close-popup">&times;</span>
+        <h2>Inloggen</h2>
+        <input id="gebruikersnaam" type="text" placeholder="Gebruikersnaam">
+        <input id="wachtwoord" type="password" placeholder="Wachtwoord">
+        <button id="login-btn">Login</button>
+        <p id="login-fout" style="color:red;"></p>
+    </div>
+</div>
+
+<div id="register-popup" class="popup">
+    <div class="popup-content">
+        <span id="close-register">&times;</span>
+        <h2>Account aanmaken</h2>
+        <input type="text" id="reg-gebruikersnaam" placeholder="Gebruikersnaam">
+        <input type="password" id="reg-wachtwoord" placeholder="Wachtwoord">
+        <input type="text" id="reg-naam" placeholder="Naam">
+        <input type="text" id="reg-adres" placeholder="Adres">
+        <input type="email" id="reg-email" placeholder="Email">
+        <button id="register-btn">Registreren</button>
+        <p id="register-fout" style="color:red;"></p>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

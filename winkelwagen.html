@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title>Winkelwagen</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #winkelwagen-container {
+            margin-top: 20px;
+        }
+        .winkelwagen-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ccc;
+            padding: 10px 0;
+        }
+        .item-info {
+            flex: 2;
+        }
+        .item-controls {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        button {
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+        #totaalprijs {
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Jouw Winkelwagen</h1>
+    <nav>
+        <ul>
+            <a href="index.html" id="index-knop">🧀</a>
+        </ul>
+    </nav>
+</header>
+
+<div id="winkelwagen-container">
+</div>
+
+<h3 id="totaalprijs">Totaal: €0,00</h3>
+
+<a href="checkout.html">
+    <button>Ga naar checkout</button>
+</a>
+
+<script src="winkelwagen.js"></script>
+</body>
+</html>

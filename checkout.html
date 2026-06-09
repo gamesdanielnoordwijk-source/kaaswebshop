@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header-checkout">
+    <h1>Checkout</h1>
+    <nav>
+        <ul>
+            <a href="winkelwagen.html" id="winkelwagen-knop">🛒</a>
+            <a href="index.html" id="index2-knop">🧀</a>
+        </ul>
+    </nav>
+</header>
+
+<section id="checkout-container">
+    <h2>Bestelgegevens</h2>
+    <form id="checkout-form">
+        <input type="text" id="naam" placeholder="Naam" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="text" id="adres" placeholder="Adres" required>
+        <input type="text" id="postcode" placeholder="Postcode" required>
+        <input type="text" id="plaats" placeholder="Plaats" required>
+        <button type="submit">Bestellen</button>
+    </form>
+    <h3 id="checkout-totaal">Totaal: €0,00</h3>
+</section>
+
+<script src="checkout.js"></script>
+</body>
+</html>
