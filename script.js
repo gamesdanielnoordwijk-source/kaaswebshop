@@ -1,57 +1,119 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", async function() {
 
     let winkelwagen = JSON.parse(localStorage.getItem("winkelwagen")) || [];
-    let knoppen = document.querySelectorAll(".koop-knop");
-
-    knoppen.forEach(function(knop) {
-        knop.addEventListener("click", function() {
-            let product = knop.parentElement;
-            let naam = product.querySelector("h2").innerText;
-            let prijs = product.querySelector(".prijs").innerText;
-            let item = { naam, prijs, aantal: 1 };
-
-            winkelwagen.push(item);
-            localStorage.setItem("winkelwagen", JSON.stringify(winkelwagen));
-
-            let img = product.querySelector("img");
-            let clone = img.cloneNode(true);
-            let rect = img.getBoundingClientRect();
-
-            clone.style.position = "absolute";
-            clone.style.left = rect.left + window.scrollX + "px";
-            clone.style.top = rect.top + window.scrollY + "px";
-            clone.style.width = rect.width + "px";
-            clone.style.transition = "all 0.8s ease";
-            clone.style.zIndex = "9999";
-
-            document.body.appendChild(clone);
-
-            let cart = document.getElementById("winkelwagen-knop");
-            if (cart) {
-                let cartRect = cart.getBoundingClientRect();
-                setTimeout(() => {
-                    clone.style.left = cartRect.left + window.scrollX + "px";
-                    clone.style.top = cartRect.top + window.scrollY + "px";
-                    clone.style.width = "20px";
-                    clone.style.opacity = "0.3";
-                }, 10);
+    
+    // ============================================
+    // PRODUCTEN LADEN VAN SUPABASE
+    // ============================================
+    async function laadProducten() {
+        const loading = document.getElementById("loading");
+        const container = document.getElementById("producten-container");
+        
+        try {
+            // Fetch producten van Supabase (veilingen tabel)
+            const { data: producten, error } = await supabase
+                .from('veilingen')
+                .select('*');
+            
+            if (error) {
+                console.error('Fout bij laden producten:', error);
+                loading.innerHTML = '❌ Fout bij laden producten';
+                return;
             }
-
-            setTimeout(() => clone.remove(), 800);
-
-            let melding = document.getElementById("melding");
-            if (melding) {
-                melding.style.display = "block";
-                setTimeout(() => melding.style.display = "none", 2000);
-            }
+            
+            loading.style.display = 'none';
+            
+            // Zet HTML om naar DOM
+            container.innerHTML = '';
+            
+            producten.forEach(product => {
+                const productDiv = document.createElement('div');
+                productDiv.className = 'product';
+                productDiv.dataset.categorie = product.categorie || 'kaas';
+                productDiv.dataset.prijs = product.prijs || 0;
+                productDiv.dataset.id = product.id;
+                
+                productDiv.innerHTML = `
+                    <img src="${product.afbeelding || 'https://via.placeholder.com/250x165'}" alt="${product.naam || 'Product'}">
+                    <h2>${product.naam || 'Onbekend product'}</h2>
+                    <p class="prijs">€${parseFloat(product.prijs || 0).toFixed(2)}</p>
+                    <p>${product.beschrijving || ''}</p>
+                    <button class="koop-knop">Toevoegen aan winkelwagen</button>
+                `;
+                
+                container.appendChild(productDiv);
+            });
+            
+            // Event listeners toevoegen aan nieuwe knoppen
+            voegKoopKnopListenersTo();
+            
+        } catch (err) {
+            console.error('Fout:', err);
+            loading.innerHTML = '❌ Connectie fout';
+        }
+    }
+    
+    // Laad producten bij pagina laden
+    laadProducten();
+    
+    // ============================================
+    // WINKELWAGEN FUNCTIONALITEIT
+    // ============================================
+    function voegKoopKnopListenersTo() {
+        let knoppen = document.querySelectorAll(".koop-knop");
+        
+        knoppen.forEach(function(knop) {
+            knop.addEventListener("click", function() {
+                let product = knop.parentElement;
+                let naam = product.querySelector("h2").innerText;
+                let prijs = product.querySelector(".prijs").innerText;
+                let id = product.dataset.id;
+                let item = { id, naam, prijs, aantal: 1 };
+                
+                winkelwagen.push(item);
+                localStorage.setItem("winkelwagen", JSON.stringify(winkelwagen));
+                
+                let img = product.querySelector("img");
+                let clone = img.cloneNode(true);
+                let rect = img.getBoundingClientRect();
+                
+                clone.style.position = "absolute";
+                clone.style.left = rect.left + window.scrollX + "px";
+                clone.style.top = rect.top + window.scrollY + "px";
+                clone.style.width = rect.width + "px";
+                clone.style.transition = "all 0.8s ease";
+                clone.style.zIndex = "9999";
+                
+                document.body.appendChild(clone);
+                
+                let cart = document.getElementById("winkelwagen-knop");
+                if (cart) {
+                    let cartRect = cart.getBoundingClientRect();
+                    setTimeout(() => {
+                        clone.style.left = cartRect.left + window.scrollX + "px";
+                        clone.style.top = cartRect.top + window.scrollY + "px";
+                        clone.style.width = "20px";
+                        clone.style.opacity = "0.3";
+                    }, 10);
+                }
+                
+                setTimeout(() => clone.remove(), 800);
+                
+                let melding = document.getElementById("melding");
+                if (melding) {
+                    melding.style.display = "block";
+                    setTimeout(() => melding.style.display = "none", 2000);
+                }
+            });
         });
-    });
+    }
 
+    // ============================================
+    // LOGIN & REGISTRATIE (Supabase Auth)
+    // ============================================
     let loginKnop = document.getElementById("login-knop");
     let popup = document.getElementById("login-popup");
     let closeBtn = document.getElementById("close-popup");
-
-    /* FIX: registerPopup gedeclareerd VÓÓR de window click-handler */
     let openRegister = document.getElementById("open-register");
     let registerPopup = document.getElementById("register-popup");
     let closeRegister = document.getElementById("close-register");
@@ -78,28 +140,40 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
+    // ============================================
+    // LOGIN MET SUPABASE
+    // ============================================
     let loginBtn = document.getElementById("login-btn");
 
     if (loginBtn) {
-        loginBtn.addEventListener("click", function() {
+        loginBtn.addEventListener("click", async function() {
             let gebruikersnaam = document.getElementById("gebruikersnaam").value;
             let wachtwoord = document.getElementById("wachtwoord").value;
             let fout = document.getElementById("login-fout");
 
-            let gebruikers = JSON.parse(localStorage.getItem("gebruikers")) || [];
-            let gebruiker = gebruikers.find(g =>
-                g.gebruikersnaam === gebruikersnaam &&
-                g.wachtwoord === wachtwoord
-            );
+            try {
+                // Check in gebruikers tabel
+                const { data: gebruiker, error } = await supabase
+                    .from('gebruikers')
+                    .select('*')
+                    .eq('gebruikersnaam', gebruikersnaam)
+                    .eq('wachtwoord', wachtwoord)
+                    .single();
 
-            if (gebruiker) {
+                if (error || !gebruiker) {
+                    if (fout) fout.innerText = "Verkeerde gegevens!";
+                    return;
+                }
+
                 localStorage.setItem("ingelogd", "true");
                 localStorage.setItem("huidigeGebruiker", gebruikersnaam);
+                localStorage.setItem("gebruikerId", gebruiker.id);
                 popup.style.display = "none";
                 updateLoginUI();
                 alert("Ingelogd als " + gebruikersnaam + "!");
-            } else {
-                if (fout) fout.innerText = "Verkeerde gegevens!";
+            } catch (err) {
+                console.error('Login fout:', err);
+                if (fout) fout.innerText = "Fout bij inloggen!";
             }
         });
     }
@@ -121,6 +195,7 @@ document.addEventListener("DOMContentLoaded", function() {
         loginKnop.addEventListener("dblclick", function() {
             localStorage.removeItem("ingelogd");
             localStorage.removeItem("huidigeGebruiker");
+            localStorage.removeItem("gebruikerId");
             updateLoginUI();
         });
     }
@@ -133,10 +208,13 @@ document.addEventListener("DOMContentLoaded", function() {
         closeRegister.onclick = () => registerPopup.style.display = "none";
     }
 
+    // ============================================
+    // REGISTRATIE MET SUPABASE
+    // ============================================
     let registerBtn = document.getElementById("register-btn");
 
     if (registerBtn) {
-        registerBtn.addEventListener("click", function() {
+        registerBtn.addEventListener("click", async function() {
             let gebruikersnaam = document.getElementById("reg-gebruikersnaam")?.value;
             let wachtwoord = document.getElementById("reg-wachtwoord")?.value;
             let naam = document.getElementById("reg-naam")?.value;
@@ -149,39 +227,68 @@ document.addEventListener("DOMContentLoaded", function() {
                 return;
             }
 
-            let gebruikers = JSON.parse(localStorage.getItem("gebruikers")) || [];
-            let bestaatAl = gebruikers.find(g => g.gebruikersnaam === gebruikersnaam);
+            try {
+                // Check of gebruiker al bestaat
+                const { data: bestaatAl } = await supabase
+                    .from('gebruikers')
+                    .select('id')
+                    .eq('gebruikersnaam', gebruikersnaam)
+                    .single();
 
-            if (bestaatAl) {
-                if (fout) {
-                    fout.style.display = "block";
-                    fout.innerText = "Gebruikersnaam al in gebruik!";
+                if (bestaatAl) {
+                    if (fout) {
+                        fout.style.display = "block";
+                        fout.innerText = "Gebruikersnaam al in gebruik!";
+                    }
+                    return;
                 }
-                return;
+
+                // Voeg nieuwe gebruiker toe aan Supabase
+                const { data: nuweGebruiker, error } = await supabase
+                    .from('gebruikers')
+                    .insert([{
+                        gebruikersnaam,
+                        wachtwoord,
+                        naam,
+                        adres,
+                        email
+                    }])
+                    .select();
+
+                if (error) {
+                    console.error('Registratie fout:', error);
+                    if (fout) fout.innerText = "Fout bij registratie!";
+                    return;
+                }
+
+                localStorage.setItem("ingelogd", "true");
+                localStorage.setItem("huidigeGebruiker", gebruikersnaam);
+                localStorage.setItem("gebruikerId", nuweGebruiker[0].id);
+
+                updateLoginUI();
+                alert("Account aangemaakt!");
+
+                if (registerPopup) registerPopup.style.display = "none";
+            } catch (err) {
+                console.error('Fout:', err);
+                if (fout) fout.innerText = "Fout bij registratie!";
             }
-
-            gebruikers.push({ gebruikersnaam, wachtwoord, naam, adres, email });
-            localStorage.setItem("gebruikers", JSON.stringify(gebruikers));
-            localStorage.setItem("ingelogd", "true");
-            localStorage.setItem("huidigeGebruiker", gebruikersnaam);
-
-            updateLoginUI();
-            alert("Account aangemaakt!");
-
-            if (registerPopup) registerPopup.style.display = "none";
         });
     }
 
-    /* FIX: filterProducten slechts één keer gedefinieerd, met de juiste
-       container class ".producten" (niet ".producten-container") */
+    // ============================================
+    // FILTERING EN SORTEREN
+    // ============================================
     const zoekInput = document.getElementById("zoek-input");
     const categorieFilter = document.getElementById("categorie-filter");
     const minPrijsInput = document.getElementById("min-prijs");
     const maxPrijsInput = document.getElementById("max-prijs");
     const sortSelect = document.getElementById("sort-prijs");
-    const producten = document.querySelectorAll(".product");
 
     function filterProducten() {
+        const container = document.getElementById("producten-container");
+        const producten = container.querySelectorAll(".product");
+        
         let zoek = zoekInput.value.toLowerCase();
         let categorie = categorieFilter.value;
         let minPrijs = parseFloat(minPrijsInput.value) || 0;
@@ -216,7 +323,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 return 0;
             });
 
-            let container = document.querySelector(".producten");
             zichtbareProducten.forEach(product => container.appendChild(product));
         }
     }
